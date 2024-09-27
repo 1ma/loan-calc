@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none';">
+
+    <title>Loan Calculator</title>
+
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <script src="/js/echarts-5.5.1.min.js" defer></script>
+    <script src="/js/calculator.js" defer></script>
+</head>
+
+<body class="page-template-default page page-id-2666 page-child parent-pageid-2648 wp-embed-responsive header-full-width full-width-content genesis-breadcrumbs-visible genesis-singular-image-hidden genesis-footer-widgets-visible include-page-toc calculator first-block-core-heading">
+<div class="site-container">
+    <div class="site-inner">
+        <div class="borrowingcost_calculator">
+            <!--BEGIN CALCULATOR CONTROLLER-->
+            <div ng-controller="MainController">
+                <div class="calculator-hero">
+                    <div class="container">
+                        <h1 class="calculator-hero__title">Loan Calculator</h1>
+                        <h5 class="calculator-hero__description">In this table you can see your installments and the
+                            interest you will pay depending on the amortization method, French (fixed installments) or
+                            German (fixed principal repayment)</h5>
+                    </div>
+                </div>
+                <!--BEGIN CALCULATOR-->
+                <div class="calc">
+                    <!--BEGIN CALCULATOR OPTIONS-->
+                    <div class="calc-options" js-data-hide-decimals="0">
+                        <div class="calc-options__item calc-options__item--loan-amount">
+                            <label for="loanAmountLabel" class="calc-options__label">Loan Amount</label>
+                            <div class="calc-options__field calc-options__field--label-right" data-label="  €">
+                                <input id="loanAmountLabel" class="calc-options__input" type="number" min="0" step="1"
+                                       value="10000" js-loan-amount-value="">
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--loan-interest-rate">
+                            <label for="interestRateLabel" class="calc-options__label">Interest</label>
+                            <div class="calc-options__field calc-options__field--label-right" data-label="%">
+                                <input id="interestRateLabel" class="calc-options__input" type="number" min="0"
+                                       step="0.01" value="2.5" js-interest-value="">
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--loan-period">
+                            <label for="loanPeriodLabel" class="calc-options__label">Term</label>
+                            <div class="calc-options__field">
+                                <input id="loanPeriodLabel" class="calc-options__input" type="number" min="0" step="1"
+                                       value="10" js-loan-period-value="">
+                                <select class="calc-options__select" aria-labelledby="loanPeriodLabel"
+                                        js-loan-period-select="">
+                                    <option value="Years">Years</option>
+                                    <option value="Months">Months</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--monthly-fee">
+                            <label for="monthlyFeeLabel" class="calc-options__label">Monthly Fee</label>
+                            <div class="calc-options__field calc-options__field--label-right" data-label="  €">
+                                <input id="monthlyFeeLabel" class="calc-options__input" type="number" min="0" step="1"
+                                       value="0" js-monthly-fee="">
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--starting-fee">
+                            <label for="startingFeeLabel" class="calc-options__label">Application Fee</label>
+                            <div class="calc-options__field calc-options__field--label-right" data-label="  €">
+                                <input id="startingFeeLabel" class="calc-options__input" type="number" min="0" step="1"
+                                       value="0" js-starting-fee="">
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--payback-type">
+                            <label class="calc-options__label">Amortization Method</label>
+                            <div class="calc-options__field">
+                                <label class="calc-options__radio-label calc-options__radio-label--active">
+                                    French
+                                    <input type="radio" value="annuity" js-payback-type="">
+                                </label>
+                                <label class="calc-options__radio-label">
+                                    German
+                                    <input type="radio" value="straight" js-payback-type="">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="calc-options__item calc-options__item--payment-frequency">
+                            <label class="calc-options__label">Payment Frequency</label>
+                            <div class="calc-options__field">
+                                <label class="calc-options__radio-label calc-options__radio-label--active">
+                                    Every month
+                                    <input type="radio" value="1" js-payment-frequency="">
+                                </label>
+                                <label class="calc-options__radio-label">
+                                    Every 3 months
+                                    <input type="radio" value="3" js-payment-frequency="">
+                                </label>
+                                <label class="calc-options__radio-label">
+                                    Every 6 months
+                                    <input type="radio" value="6" js-payment-frequency="">
+                                </label>
+                                <label class="calc-options__radio-label">
+                                    Every year
+                                    <input type="radio" value="12" js-payment-frequency="">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END CALCULATOR OPTIONS-->
+                    <div class="calc-tabs">
+                        <div class="calc-tabs__menu">
+                        <span class="calc-tabs__menu-item calc-tabs__menu-item--active" js-menu-chart="">
+                            Chart
+                        </span>
+                            <span class="calc-tabs__menu-item" js-menu-breakdown="">Table</span>
+                        </div>
+                        <div class="calc-tabs__content" js-content-chart="">
+                            <div class="calc-chart">
+                                <div id="borrowing_cost_calculator"></div>
+                                <div class="calc-chart__footer">
+                                    <div class="calc-chart__footer-item">
+                                        <span class="calc-chart__footer-title">Loan</span>
+                                        <span class="calc-chart__footer-value">
+                                        <span class="calc-chart__footer-currency">
+                                            <span js-loan-result=""></span> €
+                                        </span>
+                                    </span>
+                                    </div>
+                                    <div class="calc-chart__footer-item">
+                                        <span class="calc-chart__footer-title">Fees</span>
+                                        <span class="calc-chart__footer-value">
+                                        <span class="calc-chart__footer-currency">
+                                            <span js-all-fees-result=""></span> €
+                                       </span>
+                                    </span>
+                                    </div>
+                                    <div class="calc-chart__footer-item">
+                                    <span class="calc-chart__footer-title">
+                                        Interest (<strong js-interest=""></strong>)
+                                    </span>
+                                        <span class="calc-chart__footer-value">
+                                        <span class="calc-chart__footer-currency">
+                                            <span js-total-interest=""></span> €
+                                        </span>
+                                    </span>
+                                    </div>
+                                    <div class="calc-chart__footer-item">
+                                        <span class="calc-chart__footer-title">Term</span>
+                                        <span class="calc-chart__footer-value" js-loan-period-result=""></span>
+                                    </div>
+                                    <div class="calc-chart__footer-item">
+                                        <span class="calc-chart__footer-title">Total</span>
+                                        <span class="calc-chart__footer-value">
+                                        <span class="calc-chart__footer-currency">
+                                            <strong><span js-total-payments=""></span> €</strong>
+                                        </span>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-tabs__content is-hidden" js-content-breakdown="">
+                            <div class="calc-breakdown">
+                                <div class="calc-breakdown__row calc-breakdown__row--header">
+                                    <div class="calc-breakdown__column">Date</div>
+                                    <div class="calc-breakdown__column">Principal</div>
+                                    <div class="calc-breakdown__column">Interest</div>
+                                    <div class="calc-breakdown__column">Installment</div>
+                                    <div class="calc-breakdown__column">Pending Principal</div>
+                                </div>
+                                <div js-breakdown-items=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--END CALCULATOR-->
+            </div>
+            <!--END CALCULATOR CONTROLLER-->
+        </div>
+    </div>
+</div>
+</body>
+</html>
