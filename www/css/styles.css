@@ -3,7 +3,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url(/fonts/IBMPlexSans-Regular.woff2) format('woff2')
+    src: url(../fonts/IBMPlexSans-Regular.woff2) format('woff2')
 }
 
 @font-face {
@@ -11,7 +11,7 @@
     font-style: normal;
     font-weight: 600;
     font-display: swap;
-    src: url(/fonts/IBMPlexSans-SemiBold.woff2) format('woff2')
+    src: url(../fonts/IBMPlexSans-SemiBold.woff2) format('woff2')
 }
 
 @font-face {
@@ -19,7 +19,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url(/fonts/IBMPlexSans-Bold.woff2) format('woff2')
+    src: url(../fonts/IBMPlexSans-Bold.woff2) format('woff2')
 }
 
 html {
@@ -3095,6 +3095,6 @@ body:not(.include-page-toc) .page-content__content {
     -moz-appearance:none;
     background-repeat:no-repeat;
     background-position:90% 50%;
-    background-image:url(/img/icons-fs-select-icon.svg);
+    background-image:url(../img/icons-fs-select-icon.svg);
     cursor:pointer
 }
