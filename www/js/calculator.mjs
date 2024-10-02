@@ -121,55 +121,43 @@ let loanAmountValue = Number(loanAmountValueElement.value);
 let loanAmountMin = Number(loanAmountValueElement.getAttribute('min'));
 loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(lang, options);
 
-loanAmountValueElement.addEventListener('keyup', function (e) {
-    if (this.value != '') {
-        loanAmountValueElement.addEventListener('focusout', function () {
-            setTimeout(() => {
-                loanAmountValue = Number(this.value);
-                if (loanAmountValue < loanAmountMin) {
-                    loanAmountValue = loanAmountMin;
-                }
-                loanAmountValueElement.value = loanAmountValue;
-                loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(lang, options);
-                updateMyChart(
-                    paybackType,
-                    this.value,
-                    periodTokenValue,
-                    periodValue,
-                    paymentInterval,
-                    interestValue,
-                    startingFee,
-                    monthlyFee
-                );
-            }, 1000);
-        });
+loanAmountValueElement.addEventListener('input', debounce(() => {
+    loanAmountValue = Number(loanAmountValueElement.value);
+    if (loanAmountValue < loanAmountMin) {
+        loanAmountValue = loanAmountMin;
     }
-});
+    loanAmountValueElement.value = loanAmountValue;
+    loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(lang, options);
+    updateMyChart(
+        paybackType,
+        loanAmountValueElement.value,
+        periodTokenValue,
+        periodValue,
+        paymentInterval,
+        interestValue,
+        startingFee,
+        monthlyFee
+    );
+}));
 
-interestValueElement.addEventListener('keyup', function (e) {
-    if (this.value != '') {
-        interestValueElement.addEventListener('focusout', function () {
-            setTimeout(() => {
-                interestValue = Number(this.value);
-                if (interestValue < interestValueMin) {
-                    interestValue = interestValueMin;
-                }
-                interestValueElement.value = interestValue;
-                interestResultElem.innerHTML = this.value + '%';
-                updateMyChart(
-                    paybackType,
-                    loanAmountValue,
-                    periodTokenValue,
-                    periodValue,
-                    paymentInterval,
-                    interestValue,
-                    startingFee,
-                    monthlyFee
-                );
-            }, 1000);
-        });
+interestValueElement.addEventListener('input', debounce(() => {
+    interestValue = Number(interestValueElement.value);
+    if (interestValue < interestValueMin) {
+        interestValue = interestValueMin;
     }
-});
+    interestValueElement.value = interestValue;
+    interestResultElem.innerHTML = interestValueElement.value + '%';
+    updateMyChart(
+        paybackType,
+        loanAmountValue,
+        periodTokenValue,
+        periodValue,
+        paymentInterval,
+        interestValue,
+        startingFee,
+        monthlyFee
+    );
+}));
 
 let duration = 0;
 let allFees = 0;

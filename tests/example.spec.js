@@ -20,11 +20,33 @@ test('smoke test with default values', async ({page}) => {
 
 test('test editing the loan duration', async ({page}) => {
     await page.goto('/');
-    await expect(page.locator('input#loanPeriodLabel')).toHaveValue('10');
+    await expect(page.locator('input[js-loan-period-value]')).toHaveValue('10');
     await expect(page.locator('[js-total-payments]')).toHaveText('13,574.87');
 
     await page.locator('input#loanPeriodLabel').fill('20');
-    await expect(page.locator('input#loanPeriodLabel')).toHaveValue('20');
+    await expect(page.locator('input[js-loan-period-value]')).toHaveValue('20');
     await page.waitForTimeout(DEBOUNCE_DELAY);
     await expect(page.locator('[js-total-payments]')).toHaveText('15,261.20');
+});
+
+test('test editing the loan amount', async ({page}) => {
+    await page.goto('/');
+    await expect(page.locator('input[js-loan-amount-value]')).toHaveValue('12000');
+    await expect(page.locator('[js-total-payments]')).toHaveText('13,574.87');
+
+    await page.locator('input[js-loan-amount-value]').fill('150000');
+    await expect(page.locator('input[js-loan-amount-value]')).toHaveValue('150000');
+    await page.waitForTimeout(DEBOUNCE_DELAY);
+    await expect(page.locator('[js-total-payments]')).toHaveText('169,685.82');
+});
+
+test('test editing the interest rate', async ({page}) => {
+    await page.goto('/');
+    await expect(page.locator('input[js-interest-value]')).toHaveValue('2.5');
+    await expect(page.locator('[js-total-payments]')).toHaveText('13,574.87');
+
+    await page.locator('input[js-interest-value]').fill('3.25');
+    await expect(page.locator('input[js-interest-value]')).toHaveValue('3.25');
+    await page.waitForTimeout(DEBOUNCE_DELAY);
+    await expect(page.locator('[js-total-payments]')).toHaveText('14,071.54');
 });
