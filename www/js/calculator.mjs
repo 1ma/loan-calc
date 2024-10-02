@@ -1,4 +1,4 @@
-import * as echarts from './echarts-5.5.1.esm.min.js';
+import * as echarts from './echarts-5.5.1.min.mjs';
 
 let decimalsShow = document.querySelector('.calc-options').getAttribute('js-data-hide-decimals');
 

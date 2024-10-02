@@ -1,0 +1,13 @@
+{
+  "name": "loan-calc",
+  "type": "module",
+  "scripts": {
+    "serve": "npx http-server www -p 3000",
+    "test": "npx playwright test",
+    "report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.7.4"
+  }
+}
