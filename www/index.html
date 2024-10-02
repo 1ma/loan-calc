@@ -36,7 +36,7 @@
                             <label for="loanAmountLabel" class="calc-options__label">Loan Amount</label>
                             <div class="calc-options__field calc-options__field--label-right" data-label="  €">
                                 <input id="loanAmountLabel" class="calc-options__input" type="number" min="0" step="1"
-                                       value="10000" js-loan-amount-value="">
+                                       value="12000" js-loan-amount-value="">
                             </div>
                         </div>
                         <div class="calc-options__item calc-options__item--loan-interest-rate">
@@ -48,11 +48,12 @@
                         </div>
                         <div class="calc-options__item calc-options__item--loan-period">
                             <label for="loanPeriodLabel" class="calc-options__label">Term</label>
+                            <label for="loanPeriodType" class="calc-options__label">Type</label>
                             <div class="calc-options__field">
                                 <input id="loanPeriodLabel" class="calc-options__input" type="number" min="0" step="1"
                                        value="10" js-loan-period-value="">
-                                <select class="calc-options__select" aria-labelledby="loanPeriodLabel"
-                                        js-loan-period-select="">
+                                <select id="loanPeriodType" class="calc-options__select"
+                                        aria-labelledby="loanPeriodLabel" js-loan-period-select="">
                                     <option value="Years">Years</option>
                                     <option value="Months">Months</option>
                                 </select>
