@@ -1,16 +1,9 @@
 import * as echarts from './echarts-5.5.1.min.mjs';
 
-let decimalsShow = document.querySelector('.calc-options').getAttribute('js-data-hide-decimals');
-
-let local = document.documentElement.lang;
-let localOptions = {
+let lang = document.documentElement.lang;
+let options = {
     minimumFractionDigits: 2
 };
-if (decimalsShow == 1) {
-    localOptions = {
-        minimumFractionDigits: 0
-    };
-}
 
 let calcOptions = document.querySelector('.calc-options');
 let playbackTypeBlock = calcOptions.querySelector('.calc-options__item--payback-type');
@@ -138,7 +131,7 @@ let loanResultElement = calcTabs.querySelector('[js-loan-result]');
 let loanAmountValueElement = calcOptions.querySelector('[js-loan-amount-value]');
 let loanAmountValue = Number(loanAmountValueElement.value);
 let loanAmountMin = Number(loanAmountValueElement.getAttribute('min'));
-loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(local, localOptions);
+loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(lang, options);
 
 loanAmountValueElement.addEventListener('keyup', function (e) {
     if (this.value != '') {
@@ -149,7 +142,7 @@ loanAmountValueElement.addEventListener('keyup', function (e) {
                     loanAmountValue = loanAmountMin;
                 }
                 loanAmountValueElement.value = loanAmountValue;
-                loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(local, localOptions);
+                loanResultElement.innerHTML = parseFloat(loanAmountValue.toFixed(2)).toLocaleString(lang, options);
                 updateMyChart(
                     paybackType,
                     this.value,
@@ -211,7 +204,7 @@ if (periodTokenValue === 'Years') {
 allFees = (startingFee + (monthlyFee * duration));
 
 let allFeesResultElement = calcTabs.querySelector('[js-all-fees-result]');
-allFeesResultElement.innerHTML = parseFloat(allFees.toFixed(2)).toLocaleString(local, localOptions);
+allFeesResultElement.innerHTML = parseFloat(allFees.toFixed(2)).toLocaleString(lang, options);
 
 let paymentFrequency = calcOptions.querySelectorAll('[js-payment-frequency]');
 paymentFrequency.forEach(item => {
@@ -322,23 +315,13 @@ for (let currTime = 1; currTime <= time; currTime++) {
     interestRateAmount = interest * loanAmountValueStr;
     let currentAmount = annuity - interestRateAmount;
     loanAmountValueStr = (loanAmountValueStr - currentAmount) > 0 ? loanAmountValueStr - currentAmount : 0;
-    if (decimalsShow == 1) {
-        breakdownItems.push({
-            month: currTime * paymentInterval,
-            amount: Math.round(currentAmount).toLocaleString(local, localOptions) + "€",
-            interest: Math.round(interestRateAmount).toLocaleString(local, localOptions) + "€",
-            annuity: Math.round(annuity + monthlyFee).toLocaleString(local, localOptions) + "€",
-            debt: Math.round(loanAmountValueStr).toLocaleString(local, localOptions) + "€",
-        });
-    } else {
-        breakdownItems.push({
-            month: currTime * paymentInterval,
-            amount: parseFloat(currentAmount.toFixed(2)).toLocaleString(local, localOptions) + "€",
-            interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(local, localOptions) + "€",
-            annuity: parseFloat((annuity + monthlyFee).toFixed(2)).toLocaleString(local, localOptions) + "€",
-            debt: parseFloat(loanAmountValueStr.toFixed(2)).toLocaleString(local, localOptions) + "€",
-        });
-    }
+    breakdownItems.push({
+        month: currTime * paymentInterval,
+        amount: parseFloat(currentAmount.toFixed(2)).toLocaleString(lang, options) + "€",
+        interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(lang, options) + "€",
+        annuity: parseFloat((annuity + monthlyFee).toFixed(2)).toLocaleString(lang, options) + "€",
+        debt: parseFloat(loanAmountValueStr.toFixed(2)).toLocaleString(lang, options) + "€",
+    });
 
     totalAmount += currentAmount;
     totalAnnuity += annuity;
@@ -359,7 +342,7 @@ breakdownItems.forEach(item => {
     let nowDate = new Date();
     nowDate.setMonth(nowDate.getMonth() + parseInt(item.month));
     breakdownHtml += breakdownRowStart;
-    breakdownHtml += breakdownColStart + nowDate.toLocaleString(local, dateOptionsMonth) + ', '
+    breakdownHtml += breakdownColStart + nowDate.toLocaleString(lang, dateOptionsMonth) + ', '
         + nowDate.getFullYear() + breakdownEnd;
     breakdownHtml += breakdownColStart + item.amount + breakdownEnd;
     breakdownHtml += breakdownColStart + item.interest + breakdownEnd;
@@ -397,11 +380,6 @@ function updateMyChart(
     startingFee = parseFloat(startingFeeElem.value),
     monthlyFee = parseFloat(monthlyFeeElem.value)
 ) {
-    if (decimalsShow == 1) {
-        localOptions = {
-            minimumFractionDigits: 0
-        };
-    }
     let loanAmountValueStr = loanAmountValue;
     let period = 12 / paymentInterval;
     if (periodTokenValue === 'Years') {
@@ -427,23 +405,13 @@ function updateMyChart(
                 ? loanAmountValueCalc - currentAmount
                 : 0;
 
-            if (decimalsShow == 1) {
-                breakdownItems.push({
-                    month: currTime * paymentInterval,
-                    amount: Math.round(currentAmount).toLocaleString(local, localOptions) + "€",
-                    interest: Math.round(interestRateAmount).toLocaleString(local, localOptions) + "€",
-                    annuity: Math.round(annuity + monthlyFee).toLocaleString(local, localOptions) + "€",
-                    debt: Math.round(loanAmountValueCalc).toLocaleString(local, localOptions) + "€",
-                });
-            } else {
-                breakdownItems.push({
-                    month: currTime * paymentInterval,
-                    amount: parseFloat(currentAmount.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    annuity: parseFloat((annuity + monthlyFee).toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    debt: parseFloat(loanAmountValueCalc.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                });
-            }
+            breakdownItems.push({
+                month: currTime * paymentInterval,
+                amount: parseFloat(currentAmount.toFixed(2)).toLocaleString(lang, options) + "€",
+                interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(lang, options) + "€",
+                annuity: parseFloat((annuity + monthlyFee).toFixed(2)).toLocaleString(lang, options) + "€",
+                debt: parseFloat(loanAmountValueCalc.toFixed(2)).toLocaleString(lang, options) + "€",
+            });
 
             totalAmount += currentAmount;
             totalAnnuity += annuity;
@@ -462,23 +430,13 @@ function updateMyChart(
             let totalToPay = interestRateAmount + amountSum;
             loanAmountValueCalc = loanAmountValueCalc - amountSum;
 
-            if (decimalsShow == 1) {
-                breakdownItems.push({
-                    month: currTime * paymentInterval,
-                    amount: Math.round(amountSum).toLocaleString(local, localOptions) + "€",
-                    interest: Math.round(interestRateAmount).toLocaleString(local, localOptions) + "€",
-                    annuity: Math.round(totalToPay).toLocaleString(local, localOptions) + "€",
-                    debt: Math.round(loanAmountValueCalc).toLocaleString(local, localOptions) + "€",
-                });
-            } else {
-                breakdownItems.push({
-                    month: currTime * paymentInterval,
-                    amount: parseFloat(amountSum.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    annuity: parseFloat(totalToPay.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                    debt: parseFloat(loanAmountValueCalc.toFixed(2)).toLocaleString(local, localOptions) + "€",
-                });
-            }
+            breakdownItems.push({
+                month: currTime * paymentInterval,
+                amount: parseFloat(amountSum.toFixed(2)).toLocaleString(lang, options) + "€",
+                interest: parseFloat(interestRateAmount.toFixed(2)).toLocaleString(lang, options) + "€",
+                annuity: parseFloat(totalToPay.toFixed(2)).toLocaleString(lang, options) + "€",
+                debt: parseFloat(loanAmountValueCalc.toFixed(2)).toLocaleString(lang, options) + "€",
+            });
 
             totalAmount += amountSum;
             totalInterest += interestRateAmount;
@@ -491,7 +449,7 @@ function updateMyChart(
         let nowDate = new Date();
         nowDate.setMonth(nowDate.getMonth() + parseInt(item.month));
         breakdownHtml += breakdownRowStart;
-        breakdownHtml += breakdownColStart + nowDate.toLocaleString(local, dateOptionsMonth) + ', '
+        breakdownHtml += breakdownColStart + nowDate.toLocaleString(lang, dateOptionsMonth) + ', '
             + nowDate.getFullYear() + breakdownEnd;
         breakdownHtml += breakdownColStart + item.amount + breakdownEnd;
         breakdownHtml += breakdownColStart + item.interest + breakdownEnd;
@@ -505,20 +463,13 @@ function updateMyChart(
     let allFees = (startingFee + (monthlyFee * duration));
 
     totalPayments = totalPayments + allFees;
-    totalInterestResultElement.innerHTML = parseFloat(totalInterest.toFixed(2)).toLocaleString(local, localOptions);
-    totalPaymentsResultElement.innerHTML = parseFloat(totalPayments.toFixed(2)).toLocaleString(local, localOptions);
-    allFeesResultElement.innerHTML = parseFloat(allFees.toFixed(2)).toLocaleString(local, localOptions);
+    totalInterestResultElement.innerHTML = parseFloat(totalInterest.toFixed(2)).toLocaleString(lang, options);
+    totalPaymentsResultElement.innerHTML = parseFloat(totalPayments.toFixed(2)).toLocaleString(lang, options);
+    allFeesResultElement.innerHTML = parseFloat(allFees.toFixed(2)).toLocaleString(lang, options);
     loanAmountValueStr = Number(loanAmountValueStr);
     totalInterest = Math.round((totalInterest + 0.00001) * 100) / 100;
     loanAmountValueStr = Math.round((loanAmountValueStr + 0.00001) * 100) / 100;
     allFees = Math.round((allFees + 0.00001) * 100) / 100;
-    if (decimalsShow == 1) {
-        totalInterest = Math.round(totalInterest);
-        loanAmountValueStr = Math.round(loanAmountValueStr);
-        allFees = Math.round(allFees);
-        totalInterestResultElement.innerHTML = Math.round(totalInterest).toLocaleString(local, localOptions);
-        totalPaymentsResultElement.innerHTML = Math.round(totalPayments).toLocaleString(local, localOptions);
-    }
 
     let optionData = {
         baseOption: {
@@ -533,10 +484,7 @@ function updateMyChart(
             ]
         }
     };
-    let subtext11 = parseFloat(totalPayments.toFixed(2)).toLocaleString(local, localOptions) + "€";
-    if (decimalsShow == 1) {
-        subtext11 = Math.round(totalPayments).toLocaleString(local, localOptions) + "€";
-    }
+    let subtext11 = parseFloat(totalPayments.toFixed(2)).toLocaleString(lang, options) + "€";
     let optionMediaTotal = {
         media: [
             {
@@ -564,21 +512,13 @@ function updateMyChart(
 
 let totalInterestResultElement = calcTabs.querySelector('[js-total-interest]');
 let totalPaymentsResultElement = calcTabs.querySelector('[js-total-payments]');
-totalInterestResultElement.innerHTML = parseFloat(totalInterest.toFixed(2)).toLocaleString(local, localOptions);
-totalPaymentsResultElement.innerHTML = parseFloat(totalPayments.toFixed(2)).toLocaleString(local, localOptions);
+totalInterestResultElement.innerHTML = parseFloat(totalInterest.toFixed(2)).toLocaleString(lang, options);
+totalPaymentsResultElement.innerHTML = parseFloat(totalPayments.toFixed(2)).toLocaleString(lang, options);
 
 totalInterest = Math.round((totalInterest + 0.00001) * 100) / 100;
 loanAmountValue = Math.round((loanAmountValue + 0.00001) * 100) / 100;
 allFees = Math.round((allFees + 0.00001) * 100) / 100;
-let subtext11 = parseFloat(totalPayments.toFixed(2)).toLocaleString(local, localOptions) + "€";
-if (decimalsShow == 1) {
-    totalInterest = Math.round(totalInterest);
-    loanAmountValue = Math.round(loanAmountValue);
-    allFees = Math.round(allFees);
-    totalInterestResultElement.innerHTML = parseFloat(Math.round(totalInterest)).toLocaleString(local, localOptions);
-    totalPaymentsResultElement.innerHTML = parseFloat(Math.round(totalPayments)).toLocaleString(local, localOptions);
-    subtext11 = Math.round(totalPayments).toLocaleString(local, localOptions) + "€";
-}
+let subtext11 = parseFloat(totalPayments.toFixed(2)).toLocaleString(lang, options) + "€";
 let optionData = {
     baseOption: {
         series: [
@@ -603,7 +543,7 @@ let optionBase = {
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
-                let formatted = (params.value).toLocaleString(local, localOptions);
+                let formatted = (params.value).toLocaleString(lang, options);
                 return params.name + ': ' + formatted + "€";
             }
         },
@@ -620,7 +560,7 @@ let optionBase = {
                         color: '#000000',
                         margin: '12%',
                         formatter: function (params) {
-                            let formatted = (params.value).toLocaleString(local, localOptions);
+                            let formatted = (params.value).toLocaleString(lang, options);
                             return params.name + ': ' + formatted + ' ' + 'txt14';
                         }
                     }
@@ -685,8 +625,8 @@ let optionMedia = {
                                 color: '#000000',
                                 margin: '12%',
                                 fontSize: 14,
-                                formatter: function (params) {
-                                    let formatted = (params.value).toLocaleString(local, localOptions);
+                                formatter: (params) => {
+                                    let formatted = (params.value).toLocaleString(lang, options);
                                     return params.name + ': ' + formatted + "€";
                                 }
                             },
@@ -747,12 +687,8 @@ let optionMedia = {
                                 color: '#999999',
                                 fontSize: 11,
                                 fontWeight: 'normal',
-                                formatter: function (params) {
-                                    let formatted = (params.value.toFixed()).toLocaleString(
-                                        local,
-                                        localOptions
-                                    );
-                                    return formatted + "€";
+                                formatter: (params) => {
+                                    return (params.value.toFixed()).toLocaleString() + "€";
                                 }
                             }
                         },
