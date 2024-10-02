@@ -1,5 +1,7 @@
 import {test, expect} from '@playwright/test';
 
+const DEBOUNCE_DELAY = 210;
+
 test('smoke test with default values', async ({page}) => {
     await page.goto('/');
     await expect(page.locator('input#loanAmountLabel')).toHaveValue('12000');
@@ -14,4 +16,15 @@ test('smoke test with default values', async ({page}) => {
     await expect(page.locator('[js-breakdown-items] > div')).toHaveCount(120);
     await expect(page.locator('[js-breakdown-items] > div:first-child')).toContainText("25.00€");
     await expect(page.locator('[js-breakdown-items] > div:last-child')).toContainText("0.24€");
+});
+
+test('test editing the loan duration', async ({page}) => {
+    await page.goto('/');
+    await expect(page.locator('input#loanPeriodLabel')).toHaveValue('10');
+    await expect(page.locator('[js-total-payments]')).toHaveText('13,574.87');
+
+    await page.locator('input#loanPeriodLabel').fill('20');
+    await expect(page.locator('input#loanPeriodLabel')).toHaveValue('20');
+    await page.waitForTimeout(DEBOUNCE_DELAY);
+    await expect(page.locator('[js-total-payments]')).toHaveText('15,261.20');
 });

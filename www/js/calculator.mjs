@@ -1,5 +1,19 @@
 import * as echarts from './echarts-5.5.1.min.mjs';
 
+const DEFAULT_DEBOUNCE_WAIT = 200;
+
+const debounce = (callback, wait = DEFAULT_DEBOUNCE_WAIT) => {
+    let timeoutId = null;
+
+    return (...args) => {
+        window.clearTimeout(timeoutId);
+
+        timeoutId = window.setTimeout(() => {
+            callback.apply(null, args);
+        }, wait);
+    };
+}
+
 let lang = document.documentElement.lang;
 let options = {
     minimumFractionDigits: 2
@@ -65,51 +79,25 @@ let periodTokenValue = periodTokenElement.options[periodTokenElement.selectedInd
 let periodTokenText = periodTokenElement.options[periodTokenElement.selectedIndex].text;
 
 periodResultElem.innerHTML = periodValue + ' ' + periodTokenText;
-periodValueElement.addEventListener('keyup', function (e) {
-    if (this.value != '') {
-        setTimeout(() => {
-            periodValue = Number(this.value);
-            if (periodValue < periodValueMin) {
-                periodValue = periodValueMin;
-            }
-            periodValueElement.value = periodValue;
-            periodTokenText = periodTokenElement.options[periodTokenElement.selectedIndex].text;
-            periodResultElem.innerHTML = periodValue + ' ' + periodTokenText;
-            updateMyChart(
-                paybackType,
-                loanAmountValue,
-                periodTokenValue,
-                this.value,
-                paymentInterval,
-                interestValue,
-                startingFee,
-                monthlyFee
-            );
-        }, 1000);
-    } else {
-        periodValueElement.addEventListener('focusout', function () {
-            setTimeout(() => {
-                periodValue = Number(this.value);
-                if (periodValue < periodValueMin) {
-                    periodValue = periodValueMin;
-                }
-                periodValueElement.value = periodValue;
-                periodTokenText = periodTokenElement.options[periodTokenElement.selectedIndex].text;
-                periodResultElem.innerHTML = periodValue + ' ' + periodTokenText;
-                updateMyChart(
-                    paybackType,
-                    loanAmountValue,
-                    periodTokenValue,
-                    this.value,
-                    paymentInterval,
-                    interestValue,
-                    startingFee,
-                    monthlyFee
-                );
-            }, 1000);
-        });
+periodValueElement.addEventListener('input', debounce(() => {
+    periodValue = Number(periodValueElement.value);
+    if (periodValue < periodValueMin) {
+        periodValue = periodValueMin;
     }
-});
+    periodValueElement.value = periodValue;
+    periodTokenText = periodTokenElement.options[periodTokenElement.selectedIndex].text;
+    periodResultElem.innerHTML = periodValue + ' ' + periodTokenText;
+    updateMyChart(
+        paybackType,
+        loanAmountValue,
+        periodTokenValue,
+        periodValueElement.value,
+        paymentInterval,
+        interestValue,
+        startingFee,
+        monthlyFee
+    );
+}));
 
 periodTokenElement.addEventListener('change', function (e) {
     periodTokenValue = this.options[this.selectedIndex].value;
