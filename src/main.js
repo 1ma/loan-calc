@@ -29,25 +29,25 @@ let options = {
 };
 
 let calcOptions = document.querySelector('.calc-options');
-let playbackTypeBlock = calcOptions.querySelector('.calc-options__item--payback-type');
-let playbackTypeOptions = playbackTypeBlock.querySelectorAll('.calc-options__radio-label');
-playbackTypeOptions.forEach((playbackTypeItem => {
-    playbackTypeItem.addEventListener('click', function (e) {
-        playbackTypeOptions.forEach((playbackTypeItem => {
-            playbackTypeItem.classList.remove('calc-options__radio-label--active');
+let paybackTypeBlock = calcOptions.querySelector('.calc-options__item--payback-type');
+let paybackTypeOptions = paybackTypeBlock.querySelectorAll('.calc-options__radio-label');
+paybackTypeOptions.forEach((paybackTypeItem => {
+    paybackTypeItem.addEventListener('click', () => {
+        paybackTypeOptions.forEach((item => {
+            item.classList.remove('calc-options__radio-label--active');
         }));
-        this.classList.add('calc-options__radio-label--active');
+        paybackTypeItem.classList.add('calc-options__radio-label--active');
     });
 }));
 
 let paymentFrequencyBlock = calcOptions.querySelector('.calc-options__item--payment-frequency');
 let paymentFrequencyOptions = paymentFrequencyBlock.querySelectorAll('.calc-options__radio-label');
 paymentFrequencyOptions.forEach((paymentFrequencyItem => {
-    paymentFrequencyItem.addEventListener('click', function (e) {
-        paymentFrequencyOptions.forEach((paymentFrequencyItem => {
-            paymentFrequencyItem.classList.remove('calc-options__radio-label--active');
+    paymentFrequencyItem.addEventListener('click', () => {
+        paymentFrequencyOptions.forEach((item => {
+            item.classList.remove('calc-options__radio-label--active');
         }));
-        this.classList.add('calc-options__radio-label--active');
+        paymentFrequencyItem.classList.add('calc-options__radio-label--active');
     });
 }));
 
@@ -58,13 +58,13 @@ let calcTabsMenu = calcTabs.querySelector('.calc-tabs__menu');
 let calcTabsMenuChart = calcTabsMenu.querySelector('[js-menu-chart]');
 let calcTabsMenuBreakdown = calcTabsMenu.querySelector('[js-menu-breakdown]');
 
-calcTabsMenuChart.addEventListener('click', function (e) {
+calcTabsMenuChart.addEventListener('click', () => {
     calcTabsMenuChart.classList.add('calc-tabs__menu-item--active');
     calcTabsMenuBreakdown.classList.remove('calc-tabs__menu-item--active');
     calcTabsContentChart.classList.remove('is-hidden');
     calcTabsContentBreakdown.classList.add('is-hidden');
 });
-calcTabsMenuBreakdown.addEventListener('click', function (e) {
+calcTabsMenuBreakdown.addEventListener('click', () => {
     calcTabsMenuChart.classList.remove('calc-tabs__menu-item--active');
     calcTabsMenuBreakdown.classList.add('calc-tabs__menu-item--active');
     calcTabsContentChart.classList.add('is-hidden');
@@ -108,14 +108,14 @@ periodValueElement.addEventListener('input', debounce(() => {
     );
 }));
 
-periodTokenElement.addEventListener('change', function (e) {
-    periodTokenValue = this.options[this.selectedIndex].value;
+periodTokenElement.addEventListener('change', () => {
+    periodTokenValue = periodTokenElement.options[periodTokenElement.selectedIndex].value;
     periodTokenText = periodTokenElement.options[periodTokenElement.selectedIndex].text;
     periodResultElem.innerHTML = periodValue + ' ' + periodTokenText;
     updateMyChart(
         paybackType,
         loanAmountValue,
-        this.value,
+        periodTokenElement.value,
         periodValue,
         paymentInterval,
         interestValue,
@@ -169,7 +169,6 @@ interestValueElement.addEventListener('input', debounce(() => {
 }));
 
 let duration = 0;
-let allFees = 0;
 let startingFeeElem = calcOptions.querySelector('[js-starting-fee]');
 let startingFee = parseFloat(startingFeeElem.value);
 let startingFeeMin = Number(startingFeeElem.getAttribute('min'));
@@ -186,15 +185,15 @@ if (periodTokenValue === 'Years') {
     duration = periodValue / 12 * period;
 }
 
-allFees = (startingFee + (monthlyFee * duration));
+let allFees = (startingFee + (monthlyFee * duration));
 
 let allFeesResultElement = calcTabs.querySelector('[js-all-fees-result]');
 allFeesResultElement.innerHTML = parseFloat(allFees.toFixed(2)).toLocaleString(lang, options);
 
 let paymentFrequency = calcOptions.querySelectorAll('[js-payment-frequency]');
 paymentFrequency.forEach(item => {
-    item.addEventListener('click', function (evt) {
-        paymentInterval = this.value;
+    item.addEventListener('click', () => {
+        paymentInterval = item.value;
         updateMyChart(
             paybackType,
             loanAmountValue,
@@ -208,71 +207,41 @@ paymentFrequency.forEach(item => {
     });
 });
 
-startingFeeElem.addEventListener('keyup', function (evt) {
-    if (this.value != '') {
-        setTimeout(() => {
-            startingFee = Number(this.value);
-            if (startingFee < startingFeeMin) {
-                startingFee = startingFeeMin;
-            }
-            startingFeeElem.value = startingFee;
-            updateMyChart(
-                paybackType,
-                loanAmountValue,
-                periodTokenValue,
-                periodValue,
-                paymentInterval,
-                interestValue,
-                startingFee,
-                monthlyFee
-            );
-        }, 1000);
-    } else {
-        startingFeeElem.addEventListener('focusout', function () {
-            setTimeout(() => {
-                startingFee = Number(this.value);
-                if (startingFee < startingFeeMin) {
-                    startingFee = startingFeeMin;
-                }
-                startingFeeElem.value = startingFee;
-                updateMyChart(
-                    paybackType,
-                    loanAmountValue,
-                    periodTokenValue,
-                    periodValue,
-                    paymentInterval,
-                    interestValue,
-                    startingFee,
-                    monthlyFee
-                );
-            }, 1000);
-        });
+startingFeeElem.addEventListener('input', debounce(() => {
+    startingFee = Number(startingFeeElem.value);
+    if (startingFee < startingFeeMin) {
+        startingFee = startingFeeMin;
     }
-});
+    startingFeeElem.value = startingFee;
+    updateMyChart(
+        paybackType,
+        loanAmountValue,
+        periodTokenValue,
+        periodValue,
+        paymentInterval,
+        interestValue,
+        startingFee,
+        monthlyFee
+    );
+}));
 
-monthlyFeeElem.addEventListener('keyup', function (evt) {
-    if (this.value != '') {
-        monthlyFeeElem.addEventListener('focusout', function () {
-            setTimeout(() => {
-                monthlyFee = Number(this.value);
-                if (monthlyFee < monthlyFeeMin) {
-                    monthlyFee = monthlyFeeMin;
-                }
-                monthlyFeeElem.value = monthlyFee;
-                updateMyChart(
-                    paybackType,
-                    loanAmountValue,
-                    periodTokenValue,
-                    periodValue,
-                    paymentInterval,
-                    interestValue,
-                    startingFee,
-                    monthlyFee
-                );
-            }, 1000);
-        });
+monthlyFeeElem.addEventListener('input', debounce(() => {
+    monthlyFee = Number(monthlyFeeElem.value);
+    if (monthlyFee < monthlyFeeMin) {
+        monthlyFee = monthlyFeeMin;
     }
-});
+    monthlyFeeElem.value = monthlyFee;
+    updateMyChart(
+        paybackType,
+        loanAmountValue,
+        periodTokenValue,
+        periodValue,
+        paymentInterval,
+        interestValue,
+        startingFee,
+        monthlyFee
+    );
+}));
 
 let totalInterest = 0;
 let totalAmount = 0;
@@ -288,7 +257,7 @@ if (periodTokenValue === 'Years') {
 }
 
 let powN = Math.pow(1 + parseFloat(interest), time);
-let interestRateAmount, currTime;
+let interestRateAmount;
 let totalAnnuity = 0;
 let totalPayments = 0;
 let totalSum = 0;
