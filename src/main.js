@@ -1,4 +1,13 @@
-import * as echarts from './echarts-5.5.1.min.mjs';
+import * as echarts from 'echarts/core';
+import {PieChart} from 'echarts/charts';
+import {TitleComponent} from "echarts/components";
+import {CanvasRenderer} from 'echarts/renderers';
+
+echarts.use([
+    PieChart,
+    TitleComponent,
+    CanvasRenderer
+]);
 
 const DEFAULT_DEBOUNCE_WAIT = 200;
 
