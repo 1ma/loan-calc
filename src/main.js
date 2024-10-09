@@ -430,9 +430,9 @@ function updateMyChart(
             series: [
                 {
                     data: [
-                        {value: totalInterest, name: 'Interest'},
-                        {value: loanAmountValueStr, name: 'Loan'},
-                        {value: allFees, name: 'Fees'}
+                        {value: totalInterest, name: 'Interest (' + (100 * totalInterest / (loanAmountValueStr+totalInterest+allFees)).toFixed(1) + '%)'},
+                        {value: loanAmountValueStr, name: 'Loan (' + (100 * loanAmountValueStr / (loanAmountValueStr+totalInterest+allFees)).toFixed(1) + '%)'},
+                        {value: allFees, name: 'Fees (' + (100 * allFees / (loanAmountValueStr+totalInterest+allFees)).toFixed(1) + '%)'}
                     ]
                 }
             ]
@@ -478,9 +478,9 @@ let optionData = {
         series: [
             {
                 data: [
-                    {value: totalInterest, name: 'Interest'},
-                    {value: loanAmountValue, name: 'Loan'},
-                    {value: allFees, name: 'Fees'}
+                    {value: totalInterest, name: 'Interest (' + (100 * totalInterest / (loanAmountValue+totalInterest+allFees)).toFixed(1) + '%)'},
+                    {value: loanAmountValue, name: 'Loan (' + (100 * loanAmountValue / (loanAmountValue+totalInterest+allFees)).toFixed(1) + '%)'},
+                    {value: allFees, name: 'Fees (' + (100 * allFees / (loanAmountValue+totalInterest+allFees)).toFixed(1) + '%)'}
                 ]
             }
         ]
