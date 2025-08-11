@@ -166,7 +166,7 @@ interestValueElement.addEventListener('input', debounce(() => {
         startingFee,
         monthlyFee
     );
-}));
+}, 3000));
 
 let duration = 0;
 let startingFeeElem = calcOptions.querySelector('[js-starting-fee]');
